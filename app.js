@@ -127,24 +127,29 @@ $('result-form').addEventListener('submit', async e => {
 });
 $('export').addEventListener('click', async () => {
   const records = (await TestDB.list()).map(({id,createdAt,dueAt,acceptedAt,receivedAt,openedAt,network,phoneState,sound,status}) => ({id,createdAt,dueAt,acceptedAt,receivedAt,openedAt,network,phoneState,sound,status}));
-  const file = new Blob([JSON.stringify({version:'0.0.1',exportedAt:new Date().toISOString(),records},null,2)],{type:'application/json'});
+  const file = new Blob([JSON.stringify({version:'0.0.3',exportedAt:new Date().toISOString(),records},null,2)],{type:'application/json'});
   const url = URL.createObjectURL(file); const link = document.createElement('a'); link.href=url; link.download='notification-test-results.json'; document.body.append(link);link.click();link.remove();setTimeout(() => URL.revokeObjectURL(url),60000);
 });
-async function refresh() { await render(); const id = new URL(location.href).searchParams.get('test'); if (id) await showInstruction(id, true); }
+async function markOpened(id,clickToken) {
+  if (!/^[a-f0-9-]{36}$/i.test(id || '') || !/^[a-f0-9-]{36}$/i.test(clickToken || '')) return;
+  const test=(await TestDB.list()).find(x => x.id === id);
+  if (test?.receivedAt && test.clickToken === clickToken && !test.openedAt) await TestDB.patch(id,{openedAt:Date.now()});
+}
+async function refresh() {
+  const params=new URL(location.href).searchParams;
+  const id=params.get('test');
+  if (id) await markOpened(id,params.get('open'));
+  await render();
+  if (id) await showInstruction(id, true);
+}
 document.addEventListener('visibilitychange', () => { if (!document.hidden && storageReady) refresh().catch(() => status('Не удалось прочитать историю.',true)); });
 if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', e => {
   if (e.data?.type === 'PUSH_RECEIVED') render().catch(() => {});
   if (e.data?.type === 'PUSH_OPENED') {
-    const id=e.data.id;
+    const {id,clickToken}=e.data;
     void (async () => {
-      // Persist the notification click again from the focused Home Screen app.
-      // This is only reached through a real notificationclick message; manually
-      // editing the page URL still cannot create evidence of an opening.
-      if (/^[a-f0-9-]{36}$/i.test(id || '')) {
-        const test=(await TestDB.list()).find(x => x.id === id);
-        if (test?.receivedAt && !test.openedAt) await TestDB.patch(id,{openedAt:Date.now()});
-      }
-      const url=new URL(location.href);url.searchParams.set('test',id);history.replaceState(null,'',url);
+      await markOpened(id,clickToken);
+      const url=new URL(location.href);url.searchParams.set('test',id);url.searchParams.set('open',clickToken);history.replaceState(null,'',url);
       await refresh();
     })().catch(() => status('Уведомление открылось, но отметку об открытии сохранить не удалось.',true));
   }

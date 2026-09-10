@@ -10,7 +10,7 @@
   <script src="./config.js" defer></script><script src="./db.js" defer></script><script src="./app.js" defer></script>
 </head>
 <body><main>
-  <header><span class="eyebrow">ПЛАНИРОВЩИК ПРОЦЕДУР · ТЕСТ 0.0.2</span><h1>Проверим<br>напоминания</h1><p>Один сигнал через минуту. Затем проверим, что он открыл нужную инструкцию.</p></header>
+  <header><span class="eyebrow">ПЛАНИРОВЩИК ПРОЦЕДУР · ТЕСТ 0.0.3</span><h1>Проверим<br>напоминания</h1><p>Один сигнал через минуту. Затем проверим, что он открыл нужную инструкцию.</p></header>
   <section id="install" class="card" hidden><h2>Сначала — на экран «Домой»</h2><ol><li>Открой эту страницу в Safari.</li><li>Нажми «Поделиться» → «На экран “Домой”».</li><li>Если есть переключатель «Открыть как веб-приложение», включи его.</li><li>Нажми «Добавить» и открой новую иконку.</li></ol><p>Разрешение на уведомления запросим уже там.</p></section>
   <details id="connection" class="card"><summary>Подключение теста</summary><p>Эти данные я дам после настройки сервера. Они вводятся один раз на устройстве.</p><form id="connect-form"><label>Адрес подключения<input id="endpoint" type="url" placeholder="https://functions.yandexcloud.net/…" autocomplete="url" required></label><label>Код доступа<input id="access-code" type="password" autocomplete="off" required minlength="24"></label><button id="connect">Подключить</button></form></details>
   <section class="card" id="test-panel"><div class="step"><span class="number">1</span><h2>Разреши уведомления</h2></div><p id="permission-status">Проверяю возможности устройства…</p><button id="allow" disabled>Разрешить уведомления</button>

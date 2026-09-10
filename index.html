@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1464ed"><meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Тест напоминаний">
+  <title>Проверка напоминаний</title>
+  <link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <link rel="icon" href="./icons/icon-192.png"><link rel="stylesheet" href="./style.css">
+  <script src="./config.js" defer></script><script src="./db.js" defer></script><script src="./app.js" defer></script>
+</head>
+<body><main>
+  <header><span class="eyebrow">ПЛАНИРОВЩИК ПРОЦЕДУР · ТЕСТ 0.0.1</span><h1>Проверим<br>напоминания</h1><p>Один сигнал через минуту. Затем проверим, что он открыл нужную инструкцию.</p></header>
+  <section id="install" class="card" hidden><h2>Сначала — на экран «Домой»</h2><ol><li>Открой эту страницу в Safari.</li><li>Нажми «Поделиться» → «На экран “Домой”».</li><li>Если есть переключатель «Открыть как веб-приложение», включи его.</li><li>Нажми «Добавить» и открой новую иконку.</li></ol><p>Разрешение на уведомления запросим уже там.</p></section>
+  <details id="connection" class="card"><summary>Подключение теста</summary><p>Эти данные я дам после настройки сервера. Они вводятся один раз на устройстве.</p><form id="connect-form"><label>Адрес подключения<input id="endpoint" type="url" placeholder="https://functions.yandexcloud.net/…" autocomplete="url" required></label><label>Код доступа<input id="access-code" type="password" autocomplete="off" required minlength="24"></label><button id="connect">Подключить</button></form></details>
+  <section class="card" id="test-panel"><div class="step"><span class="number">1</span><h2>Разреши уведомления</h2></div><p id="permission-status">Проверяю возможности устройства…</p><button id="allow" disabled>Разрешить уведомления</button>
+    <div class="divider"></div><div class="step"><span class="number">2</span><h2>Выбери условия теста</h2></div>
+    <label>Подключение<select id="network"><option value="wifi-no-vpn">Wi-Fi, VPN выключен</option><option value="mobile-no-vpn">Мобильная сеть, VPN выключен</option><option value="wifi-vpn">Wi-Fi, VPN включён</option><option value="mobile-vpn">Мобильная сеть, VPN включён</option></select></label>
+    <label>После запуска я…<select id="phone-state"><option value="locked">заблокирую экран</option><option value="background">перейду на главный экран</option><option value="closed">закрою приложение в переключателе</option></select></label>
+    <p class="hint">Для проверки звука выключи беззвучный режим и «Фокусирование». Проверь громкость уведомлений.</p>
+    <button id="schedule" disabled>Напомнить через минуту</button>
+    <p id="status" class="status" role="status" aria-live="polite">Сначала подключи тест.</p>
+  </section>
+  <section id="instruction" class="card instruction" hidden tabindex="-1"><span class="eyebrow">ТЕСТОВАЯ ИНСТРУКЦИЯ</span><h2>Уведомление открылось</h2><p>Это нейтральная проверка, без лекарств и назначений.</p><ol><li>Убедись, что видишь этот экран.</li><li>Отметь ниже, был ли звук.</li><li>Сохрани результат проверки.</li></ol><form id="result-form"><label>Ты услышал звук?<select id="sound" required><option value="">Выбери вариант</option><option value="yes">Да, был звук</option><option value="no">Нет, только уведомление</option><option value="unknown">Не могу оценить</option></select></label><button>Сохранить результат</button></form><p id="result-status" role="status"></p></section>
+  <section class="card"><div class="section-heading"><h2>Результаты</h2><button id="export" class="text-button" disabled>Скачать отчёт</button></div><p id="empty">Пока ни одной проверки.</p><div id="history"></div><p class="hint">Получение фиксирует приложение, звук отмечаешь ты. История остаётся на этом устройстве.</p></section>
+  <footer>Прототип проверяет доставку уведомлений. Расписания курсов добавим после испытания.</footer>
+</main></body></html>
